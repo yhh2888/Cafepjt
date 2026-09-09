@@ -127,7 +127,7 @@ public class AdminMenuDao {
 		
 		List<String> args = new ArrayList<String>();
 		
-		String sql = "UPDATE TBL_MENU SET ";
+		String sql = "UPDATE tbl_menu SET ";
 		
 		
 		sql += "m_name = ?, ";
