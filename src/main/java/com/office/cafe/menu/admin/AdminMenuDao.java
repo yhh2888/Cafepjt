@@ -22,15 +22,15 @@ public class AdminMenuDao {
 	}
 	
 	public int insertMenu(AdminMenuDto adminMenuDto) {
-		System.out.println(CLASS_NAME.concat("insertBook()"));
+		System.out.println(CLASS_NAME.concat("insertMenu()"));
 		
 		String sql =  "INSERT INTO "
 						+ "tbl_menu("
-							+ "m_no "
+							+ "m_no, "
 							+ "m_name, "
-							+ "m_pay "
+							+ "m_pay, "
 							+ "m_marketing, "
-							+ "m_reg_date "
+							+ "m_reg_date, "
 							+ "m_mod_date)"
 						+ "VALUES(?, ?, ?, ?, ?, ?)";
 		

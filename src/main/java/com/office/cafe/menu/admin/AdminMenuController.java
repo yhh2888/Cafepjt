@@ -44,26 +44,15 @@ public class AdminMenuController {
 	}
 	
 	@PostMapping("/registerMenuConfirm")
-	public String registerMenuConfirm(AdminMenuDto adminMenuDto,
-			@RequestParam("file") MultipartFile file) {
+	public String registerMenuConfirm(AdminMenuDto adminMenuDto) {
 		System.out.println(CLASS_NAME.concat("registerMenuConfirm()"));
 		
 		String nextPage = "admin/menu/register_menu_ok";
 		
-		// SAVE FILE
-//		UploadFileService uploadFileService = new UploadFileService();
-		String savedFileName = uploadFileService.upload(file);
-		
-		if (savedFileName != null) {
-			int result = adminMenuService.registerMenuConfirm(adminMenuDto);
+		int result = adminMenuService.registerMenuConfirm(adminMenuDto);
 			
-			if (result <= 0)
-				nextPage = "admin/menu/register_menu_ng";
-			
-		} else {
+		if (result <= 0)
 			nextPage = "admin/menu/register_menu_ng";
-			
-		}
 		
 		return nextPage;
 	}
@@ -161,4 +150,12 @@ public class AdminMenuController {
 		return nextPage;	
 	}
 	
+	@GetMapping("/listUpForm")
+	public String listUpForm() {
+		System.out.println(CLASS_NAME.concat("listUpForm()"));
+		
+		String nextPage = "admin/menu/list_up_form";
+		
+		return nextPage;
+	}
 }

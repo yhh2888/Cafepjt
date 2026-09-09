@@ -1,43 +1,267 @@
 package com.office.cafe.admin;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class AdminMemberDao {
+	
+	final private String CLASS_NAME = "[AdminMemberDao] ";
+	
+	final private JdbcTemplate jdbcTemplate;
+	
+//	@Autowired
+	public AdminMemberDao(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+		
+	}
+	
+	public boolean isAdminMember(String a_m_id) {
+		System.out.println(CLASS_NAME.concat("isAdminMember()"));
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+		String sql =  "SELECT COUNT(*) FROM tbl_admin_member "
+					+ "WHERE a_m_id = ?";
+		
+		int result = jdbcTemplate.queryForObject(sql, Integer.class, a_m_id);
+		
+		return result > 0 ? true : false;
+		
+	}
 
-    // 아이디 중복확인
-    public boolean isAdminMember(String amId) {
-        String sql = "SELECT COUNT(*) FROM tbl_admin_member WHERE a_m_id = ?";
-        int result = jdbcTemplate.queryForObject(sql, Integer.class, amId);
-        return result > 0;
-    }
+	public int insertAdminAccount(AdminMemberDto adminMemberDto) {
+		System.out.println(CLASS_NAME.concat("insertAdminAccount()"));
+		
+		// super admin
+		
+//		String sql =  "INSERT INTO tbl_admin_member(a_m_id, a_m_pw, a_m_name, a_m_gender, a_m_part, a_m_position, a_m_mail, a_m_phone) "
+//					+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+		
+//		String sql =  "INSERT INTO tbl_admin_member(a_m_approval, a_m_id, a_m_pw, a_m_name, a_m_gender, a_m_part, a_m_position, a_m_mail, a_m_phone) "
+//				+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+//		
+//		int result = jdbcTemplate.update(sql, 
+//				1,
+//				adminMemberDto.getA_m_id(),
+//				adminMemberDto.getA_m_pw(),
+//				adminMemberDto.getA_m_name(),
+//				adminMemberDto.getA_m_gender(),
+//				adminMemberDto.getA_m_part(),
+//				adminMemberDto.getA_m_position(),
+//				adminMemberDto.getA_m_mail(),
+//				adminMemberDto.getA_m_phone());
+		
+		List<String> args = new ArrayList<String>();
+		
+		String sql = "INSERT INTO tbl_admin_member(";
+		
+		sql += "a_m_id, ";
+		args.add(adminMemberDto.getA_m_id());
+		
+		sql += "a_m_pw, ";
+		args.add(adminMemberDto.getA_m_pw());
+		
+		sql += "a_m_name, ";
+		args.add(adminMemberDto.getA_m_name());
+		
+		sql += "a_m_phone) ";
+		args.add(adminMemberDto.getA_m_phone());
+		
+		if (adminMemberDto.getA_m_id().equals("super admin")) {
+			sql += "VALUES(?, ?, ?, ?)";
+			
+		} else {
+			sql += "VALUES(?, ?, ?, ?)";
+			
+		}
+		
+		int result = jdbcTemplate.update(sql, args.toArray());
+		
+		
+		return result;
+		
+	}
 
-    // 회원가입
-    public int insertAdminMember(AdminMemberDto dto) {
-        String sql = "INSERT INTO tbl_admin_member (a_m_id, a_m_pw, a_m_name, a_m_phone) VALUES (?, ?, ?, ?)";
-        return jdbcTemplate.update(sql, dto.getAmId(), dto.getAmPw(), dto.getAmName(), dto.getAmPhone());
-    }
+	public AdminMemberDto selectAdmin(String a_m_id) {
+		System.out.println(CLASS_NAME.concat("selectAdmin()"));
+		
+		String sql =  "SELECT * FROM tbl_admin_member "
+					+ "WHERE a_m_id = ?";
+		
+		List<AdminMemberDto> adminMemberDtos = new ArrayList<AdminMemberDto>();  // Ox123
+		
+		try {
+			
+			adminMemberDtos = jdbcTemplate.query(sql, new RowMapper<AdminMemberDto>() {	// Ox456
 
-    // 아이디로 조회 (로그인, 정보수정용)
-    public AdminMemberDto findByAmId(String amId) {
-        String sql = "SELECT * FROM tbl_admin_member WHERE a_m_id = ?";
-        try {
-            return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(AdminMemberDto.class), amId);
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
-    }
+				@Override
+				public AdminMemberDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+					
+					AdminMemberDto adminMemberDto = new AdminMemberDto();
+					
+					adminMemberDto.setA_m_no(rs.getInt("a_m_no"));
+					adminMemberDto.setA_m_id(rs.getString("a_m_id"));
+					adminMemberDto.setA_m_pw(rs.getString("a_m_pw"));
+					adminMemberDto.setA_m_name(rs.getString("a_m_name"));
+					adminMemberDto.setA_m_phone(rs.getString("a_m_phone"));
+					adminMemberDto.setA_m_reg_date(rs.getString("a_m_reg_date"));
+					adminMemberDto.setA_m_mod_date(rs.getString("a_m_mod_date"));
+					
+					return adminMemberDto;
+					
+				}
+				
+			}, a_m_id);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+		
+		return adminMemberDtos.size() > 0 ? adminMemberDtos.get(0) : null;
+		
+	}
 
-    // 회원정보 수정
-    public int updateAdminMember(AdminMemberDto dto) {
-        String sql = "UPDATE tbl_admin_member SET a_m_pw = ?, a_m_name = ?, a_m_phone = ? WHERE a_m_id = ?";
-        return jdbcTemplate.update(sql, dto.getAmPw(), dto.getAmName(), dto.getAmPhone(), dto.getAmId());
-    }
+	public List<AdminMemberDto> selectAdmins() {
+		System.out.println(CLASS_NAME.concat("selectAdmins()"));
+		
+		String sql =  "SELECT * FROM tbl_admin_member "
+					+ "ORDER BY a_m_no DESC";  // ASC or DESC
+		
+		List<AdminMemberDto> adminMemberDtos = new ArrayList<AdminMemberDto>();
+		
+		try {
+			
+			adminMemberDtos = jdbcTemplate.query(sql, new RowMapper<AdminMemberDto>() {
+
+				@Override
+				public AdminMemberDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+					
+					AdminMemberDto adminMemberDto = new AdminMemberDto();
+					
+					adminMemberDto.setA_m_no(rs.getInt("a_m_no"));
+					adminMemberDto.setA_m_id(rs.getString("a_m_id"));
+					adminMemberDto.setA_m_pw(rs.getString("a_m_pw"));
+					adminMemberDto.setA_m_name(rs.getString("a_m_name"));
+					adminMemberDto.setA_m_phone(rs.getString("a_m_phone"));
+					adminMemberDto.setA_m_reg_date(rs.getString("a_m_reg_date"));
+					adminMemberDto.setA_m_mod_date(rs.getString("a_m_mod_date"));
+					
+					return adminMemberDto;
+					
+				}
+				
+			});
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+		
+		return adminMemberDtos;
+		
+	}
+
+	public int updateAdminAccount(AdminMemberDto adminMemberDto) {
+		System.out.println(CLASS_NAME.concat("updateAdminAccount()"));
+		
+		String sql =  "UPDATE "
+						+ "tbl_admin_member "
+					+ "SET "
+						+ "a_m_name = ?, "
+						+ "a_m_phone = ? "
+					+ "WHERE "
+						+ "a_m_no = ?";
+		
+		int result = -1;
+		
+		try {
+			result = jdbcTemplate.update(sql, 
+											adminMemberDto.getA_m_name(),
+											adminMemberDto.getA_m_gender(),
+											adminMemberDto.getA_m_part(),
+											adminMemberDto.getA_m_position(),
+											adminMemberDto.getA_m_mail(),
+											adminMemberDto.getA_m_phone(), 
+											adminMemberDto.getA_m_no());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+		
+		return result;
+		
+	}
+
+	public AdminMemberDto selectAdmin(String a_m_id, String a_m_name, String a_m_mail) {
+		System.out.println(CLASS_NAME.concat("selectAdmin()"));
+		
+		String sql =  "SELECT "
+						+ "* "
+					+ "FROM "
+						+ "tbl_admin_member "
+					+ "WHERE "
+						+ "a_m_id = ? AND "
+						+ "a_m_name = ?";
+		
+		List<AdminMemberDto> adminMemberDtos = new ArrayList<AdminMemberDto>();
+		
+		try {
+			
+			adminMemberDtos = jdbcTemplate.query(sql, new RowMapper<AdminMemberDto>() {
+
+				@Override
+				public AdminMemberDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+					
+					AdminMemberDto adminMemberDto = new AdminMemberDto();
+					
+					adminMemberDto.setA_m_no(rs.getInt("a_m_no"));
+					adminMemberDto.setA_m_id(rs.getString("a_m_id"));
+					adminMemberDto.setA_m_pw(rs.getString("a_m_pw"));
+					adminMemberDto.setA_m_name(rs.getString("a_m_name"));
+					adminMemberDto.setA_m_phone(rs.getString("a_m_phone"));
+					adminMemberDto.setA_m_reg_date(rs.getString("a_m_reg_date"));
+					adminMemberDto.setA_m_mod_date(rs.getString("a_m_mod_date"));
+					
+					return adminMemberDto;
+					
+				}
+				
+			}, a_m_id, a_m_name, a_m_mail);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+		
+		return adminMemberDtos.size() > 0 ? adminMemberDtos.get(0) : null;
+		
+	}
+
+	public int updatePassword(String a_m_id, String newPassword) {
+		System.out.println(CLASS_NAME.concat("updatePassword()"));
+		
+		String sql = "UPDATE tbl_admin_member SET a_m_pw = ? WHERE a_m_id = ?";
+		
+		int result = -1;
+		
+		try {
+			result = jdbcTemplate.update(sql, newPassword, a_m_id);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+		}
+		
+		return result;
+		
+	}
+
 }
+

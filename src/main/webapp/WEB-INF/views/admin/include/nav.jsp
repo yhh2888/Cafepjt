@@ -20,8 +20,7 @@
 				<ul>
 				
 					<li><a href="<c:url value='/admin/member/logoutConfirm' />">로그아웃</a></li>
-					<li><a href="<c:url value='/admin/member/modifyAccountForm' />">계정수정</a></li>
-					<li><a href="#none">전체메뉴</a></li>
+					<li><a href="/menu/admin/listUpForm">전체메뉴</a></li>
 					<li><a href="<c:url value='/menu/admin/registerMenuForm' />">메뉴등록</a></li>
 				
 				</ul>

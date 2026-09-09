@@ -22,7 +22,6 @@ public class AdminMenuService {
 	
 	public int registerMenuConfirm(AdminMenuDto adminMenuDto) {
 		System.out.println(CLASS_NAME.concat("registerMenuConfirm()"));
-	
 		int result = adminMenuDao.insertMenu(adminMenuDto);
 		
 		if (result > 0) {
