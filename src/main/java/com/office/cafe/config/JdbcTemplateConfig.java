@@ -4,6 +4,8 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class JdbcTemplateConfig {
@@ -18,7 +20,7 @@ public class JdbcTemplateConfig {
 				new BasicDataSource();
 		
 		basicDataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-		basicDataSource.setUrl("jdbc:mysql://localhost:3306/db_library");
+		basicDataSource.setUrl("jdbc:mysql://localhost:3306/DB_MENU");
 		basicDataSource.setUsername("root");
 		basicDataSource.setPassword("1234");
 		
@@ -39,6 +41,14 @@ public class JdbcTemplateConfig {
 		jdbcTemplate.setDataSource(dataSource());
 		
 		return jdbcTemplate;
+		
+	}
+	
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		System.out.println(CLASS_NAME.concat("passwordEncoder()"));
+		
+		return new BCryptPasswordEncoder();
 		
 	}
 	
