@@ -19,7 +19,7 @@ public class UserMemberService {
 	final PasswordEncoder passwordEncoder;
 
 	public int createAccountConfirm(UserMemberDto userMemberDto) {
-		System.out.println(CLASS_NAME.concat("createAccountConfirm"));
+		System.out.println(CLASS_NAME.concat("createAccountConfirm()"));
 		
 		boolean isMember = userMemberDao.isUser(userMemberDto.getU_m_id());
 		
@@ -38,6 +38,46 @@ public class UserMemberService {
 		} else {
 			return USER_ACCOUNT_ALREADY_EXIST;
 		}
+		
+	}
+
+	public String loginConfirm(UserMemberDto userMemberDto) {
+		System.out.println(CLASS_NAME.concat("loginConfirm()"));
+		
+		UserMemberDto selectedUserMemberDto = 
+				userMemberDao.selectUser(userMemberDto.getU_m_id());
+		
+		if (selectedUserMemberDto != null) {
+			if (passwordEncoder.matches(userMemberDto.getU_m_pw(), selectedUserMemberDto.getU_m_pw())) {
+				System.out.println(CLASS_NAME.concat("USER MEMBER LOGIN SUCCESS!!"));
+				return selectedUserMemberDto.getU_m_id();
+				
+			}
+			
+			System.out.println(CLASS_NAME.concat("USER MEMBER LOGIN FAIL!!"));
+			return null;
+			
+		}
+		
+		System.out.println(CLASS_NAME.concat("USER MEMBER LOGIN FAIL!!"));
+		return null;
+	}
+
+	public UserMemberDto modifyAccountForm(String loginedUserMemberId) {
+		System.out.println(CLASS_NAME.concat("modifyAccountForm()"));
+		
+		UserMemberDto loginedUserMemberDto =
+				userMemberDao.selectUser(loginedUserMemberId);
+		
+		return loginedUserMemberDto;
+	}
+
+	public int modifyAccountForm(UserMemberDto userMemberDto) {
+		System.out.println(CLASS_NAME.concat("modifyAccountForm()"));
+		
+		int result = userMemberDao.updateUserAccount(userMemberDto);
+		
+		return result;
 		
 	}
 }
