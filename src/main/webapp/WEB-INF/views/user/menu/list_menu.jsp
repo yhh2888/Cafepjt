@@ -8,7 +8,7 @@
 
 <jsp:include page = "../../include/title.jsp" />
 
-<link href="<c:url value='/resources/css/include/full_list_of_menu.css'/>"  rel="stylesheet" type="text/css" >
+<link href="<c:url value='/resources/css/user/include/full_list_of_menus.css'/>"  rel="stylesheet" type="text/css" >
 
 </head>
 <body>
