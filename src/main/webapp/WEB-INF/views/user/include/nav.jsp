@@ -18,6 +18,7 @@
 			<div class="menu">
 				<ul>
 					<li><a href="<c:url value='/user/member/logoutConfirm' />">로그아웃</a></li>
+					<li><a href="<c:url value='/user/member/modifyConfirm' />">회원정보수정</a></li>
 					<li><a href="<c:url value='/user/menu/listupBooksForm'/>">메뉴 목록</a></li>
 				</ul>
 			

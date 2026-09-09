@@ -58,7 +58,7 @@ public class UserMenuDao {
 		String sql = "SELECT * FROM tbl_menu "
 					+ "WHERE m_no = ?";
 		
-		List<UserMenuDto> userMenuDtos = null;
+		List<UserMenuDto > userMenuDtos = null;
 		
 		try {
 			RowMapper<UserMenuDto> rowMapper = 

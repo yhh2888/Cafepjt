@@ -14,10 +14,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.office.cafe.menu.admin.util.UploadFileService;
-import com.office.cafe.menu.admin.AdminMenuService;
+
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequestMapping("/menu/admin")
+@RequiredArgsConstructor
 public class AdminMenuController {
 	
 	final private String CLASS_NAME = "[AdminMenuController]";
@@ -25,10 +27,6 @@ public class AdminMenuController {
 	final private AdminMenuService adminMenuService;
 	final private UploadFileService uploadFileService;
 	
-	public AdminMenuController(AdminMenuService adminMenuService, UploadFileService uploadFileService) {
-		this.adminMenuService = adminMenuService;
-		this.uploadFileService = uploadFileService;
-	}
 	
 	@GetMapping("/registerMenuForm")
 	public String registerMenuForm(HttpSession session) {
