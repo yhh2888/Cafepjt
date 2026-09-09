@@ -7,7 +7,7 @@
 	function searchMenuForm() {
 		console.log('searchMenuForm() CALLED!!')
 		
-		let form = document.search_menu_form;
+		let form = document.search_menu;
 		if(form.m_name.value === '') {
 			alert('Enter the name of menu you are looking for.')
 			form.m_name.focus();

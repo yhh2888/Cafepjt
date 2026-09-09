@@ -10,16 +10,16 @@
 	<div id="nav_wrap">
 	
 		<%
-			Object object = session.getAttribute("loginedAdminMemberId");
+			Object object = session.getAttribute("loginedUserMemberId");
 			
 			if(object != null) {
-			String loginedAdminMemberId = String.valueOf(object);
+			String loginedUserMemberId = String.valueOf(object);
 		%>
 			<div class="menu">
 				<ul>
 					<li><a href="<c:url value='/user/member/logoutConfirm' />">로그아웃</a></li>
-					<li><a href="<c:url value='/user/member/modifyConfirm' />">회원정보수정</a></li>
-					<li><a href="<c:url value='/user/menu/listupBooksForm'/>">메뉴 목록</a></li>
+					<li><a href="<c:url value='/user/member/modifyAccountForm' />">회원정보수정</a></li>
+					<li><a href="<c:url value='/user/menu/listMenuConfirm'/>">메뉴 목록</a></li>
 				</ul>
 			
 			</div>
@@ -43,7 +43,7 @@
 		<div class="search">
 			<form 
 				action="<c:url value='/user/menu/searchMenuConfirm' />"
-				name="search_menu_form"
+				name="search_menu"
 				method="get">
 			<input type="text" name="m_name" placeholder="Enter the name of the menu you ar looking for.">
 			<input type="button" value="search" onclick="searchMenuForm();">

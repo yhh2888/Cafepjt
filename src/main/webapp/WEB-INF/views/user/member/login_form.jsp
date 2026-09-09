@@ -43,7 +43,6 @@
 			</div>
 			
 			<div class="find_password_create_account">
-				<a href="<c:url value='/user/member/findPasswordForm'/>">find password</a>
 				<a href="<c:url value='/user/member/createAccountForm'/>">create account</a>
 			
 			</div>

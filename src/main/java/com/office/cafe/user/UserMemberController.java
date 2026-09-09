@@ -23,9 +23,9 @@ public class UserMemberController {
 	 * 사용자 회원 가입 양식
 	 * /user/member/createAccountForm
 	 */
-	@GetMapping("/createAcountForm")
-	public String createAcountForm() {
-		System.out.println(CLASS_NAME.concat("createAcountForm()"));
+	@GetMapping("/createAccountForm")
+	public String createAccountForm() {
+		System.out.println(CLASS_NAME.concat("createAccountForm()"));
 		
 		String nextPage = "user/member/create_account_form";
 		
@@ -46,7 +46,7 @@ public class UserMemberController {
 		int result = userMemberService.createAccountConfirm(userMemberDto);
 		
 		if (result <= 0)
-			nextPage = "user/member/crate_account_ng";
+			nextPage = "user/member/create_account_ng";
 		
 		return nextPage;
 			
@@ -139,7 +139,7 @@ public class UserMemberController {
 		
 		String nextPage = "user/member/modify_account_ok";
 		
-		int result = userMemberService.modifyAccountForm(userMemberDto);
+		int result = userMemberService.modifyAccountConfirm(userMemberDto);
 		
 		if (result <= 0)
 			nextPage = "user/member/modify_account_ng";

@@ -8,7 +8,7 @@
 
 <jsp:include page = "../../include/title.jsp" />
 
-<link href="<c:url value='/resources/css/user/full_list_of_menus.css'/>"  rel="stylesheet" type="text/css" >
+<link href="<c:url value='/resources/css/user/search_menus.css'/>"  rel="stylesheet" type="text/css" >
 
 </head>
 <body>
@@ -22,7 +22,7 @@
 		<div id="section_wrap">
 			
 			<div class="word">
-				<h3>MENU LIST FORM</h3>
+				<h3>SEARCH MENU FORM</h3>
 			
 			</div>
 		
@@ -37,7 +37,7 @@
 					</thead>
 					
 					<tbody>
-						<c:forEach var="item" items="${menuDtos}">
+						<c:forEach var="item" items="${userMenuDtos}">
 						<tr>
 							<td>
 							<c:url value='/menu/user/menuDetail' var='detail_url'>
