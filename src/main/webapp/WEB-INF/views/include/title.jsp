@@ -1,12 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-
-</body>
-</html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<link href="<c:url value='/resources/css/common/common.css' />" rel="stylesheet" type="text/css">
+<title>Cafe foods & drinks</title>
