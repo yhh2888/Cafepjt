@@ -41,9 +41,8 @@
 					<input type="hidden" name="m_no">
 					
 					<input type="text" name="m_name" placeholder="INPUT MENU NAME"><br>
-					<input type="text" name="m_pay" placeholder="INPUT MENU AUTHOR"><br>
-					<input type="text" name="m_marketing" placeholder="INPUT MENU PUBLISHER"><br>
-					<input type="file" name="file"><br>
+					<input type="text" name="m_pay" placeholder="INPUT MENU PAY"><br>
+					<input type="text" name="m_marketing" placeholder="INPUT MENU MARKETING"><br>
 					<input type="button" value="register menu" onclick="registerMenuForm();">
 					<input type="reset" value="reset">
 				</form>

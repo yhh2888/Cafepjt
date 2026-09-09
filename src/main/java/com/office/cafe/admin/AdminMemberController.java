@@ -1,80 +1,124 @@
 package com.office.cafe.admin;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
 @Controller
+@RequestMapping("/admin/member")
 public class AdminMemberController {
 
-    @Autowired
-    private AdminMemberService adminMemberService;
+	final private String CLASS_NAME = "[AdminMemberController] ";
+	
+	final private AdminMemberService adminMemberService;
+	
+	public AdminMemberController(AdminMemberService adminMemberService) {
+		this.adminMemberService = adminMemberService;
+		
+	}
+	
+	/*
+	 * 회원(관리자) 가입 양식
+	 */
+//	@RequestMapping(value = "/createAccountForm", method = RequestMethod.GET)
+//	@RequestMapping(value = "/createAccountForm")
+//	@RequestMapping("/createAccountForm")
+	@GetMapping("/createAccountForm")
+	public String createAccountForm() {
+		System.out.println(CLASS_NAME.concat("createAccountForm()"));
+		
+		String nextPage = "admin/member/create_account_form";
+		
+		return nextPage;
+		
+	}
+	
+	/*
+	 * 회원(관리자) 가입 확인
+	 */
+//	@RequestMapping(value = "/createAccountConfirm", method = RequestMethod.POST)
+	@PostMapping("/createAccountConfirm")
+	public String createAccountConfirm(AdminMemberDto adminMemberDto) {
+		System.out.println(CLASS_NAME.concat("createAccountConfirm()"));
+		
+		String nextPage = "admin/member/create_account_ok";
+		
+		int result = adminMemberService.createAccountConfirm(adminMemberDto);
+		if (result <= AdminMemberService.ADMIN_ACCOUNT_ALREADY_EXIST) 
+			nextPage = "admin/member/create_account_ng";
+		
+		return nextPage;
+		
+	}
+	
+	/*
+	 * 회원(관리자) 로그인 양식  (/admin/member/loginForm)
+	 */
+	@GetMapping("/loginForm")
+	public String loginForm() {
+		System.out.println(CLASS_NAME.concat("loginForm()"));
+		
+		String nextPage = "admin/member/login_form";
+		
+		return nextPage;
+		
+	}
+	
+	
+	/*
+	 * 회원(관리자) 로그인 확인  (/admin/member/loginConfirm)
+	 */
+	@PostMapping("/loginConfirm")
+	public String loginConfirm(AdminMemberDto adminMemberDto, HttpSession session) {
+		System.out.println(CLASS_NAME.concat("loginConfirm()"));
+		
+		String nextPage = "admin/member/login_ok";
+		
+		String loginedAdminMemberId = adminMemberService.loginConfirm(adminMemberDto);
+		if (loginedAdminMemberId == null) {
+			nextPage = "admin/member/login_ng";
+			
+		} else {
+			session.setAttribute("loginedAdminMemberId", loginedAdminMemberId);
+			session.setMaxInactiveInterval(60 * 30);
+			
+		}
+		
+		return nextPage;
+		
+	}
+	
+	/*
+	 * 관리자 로그 아웃 화인
+	 */
+	@GetMapping("/logoutConfirm")
+	public String logoutConfirm(HttpSession session) {
+		System.out.println(CLASS_NAME.concat("logoutConfirm()"));
+		
+		String nextPage = "redirect:/admin";
+		
+//		session.removeAttribute("loginedAdminMemberId");
+		session.invalidate();	// 무효화
+		
+		return nextPage;
+		
+	}
 
-    // 회원가입 폼
-    @GetMapping("/admin/join")
-    public String joinForm() {
-        return "admin/join";
-    }
-
-    // 회원가입 처리
-    @PostMapping("/admin/join")
-    public String join(AdminMemberDto dto, RedirectAttributes redirectAttributes) {
-        int result = adminMemberService.join(dto);
-
-        if (result == AdminMemberService.ACCOUNT_ALREADY_EXIST) {
-            redirectAttributes.addFlashAttribute("message", "이미 존재하는 아이디입니다.");
-            return "redirect:/admin/join";
-        }
-
-        return "redirect:/admin/login";
-    }
-
-    // 로그인 폼
-    @GetMapping("/admin/login")
-    public String loginForm() {
-        return "admin/login";
-    }
-
-    // 로그인 처리
-    @PostMapping("/admin/login")
-    public String login(@RequestParam String amId, @RequestParam String amPw,
-                         HttpSession session, RedirectAttributes redirectAttributes) {
-
-        AdminMemberDto dto = adminMemberService.login(amId, amPw);
-
-        if (dto == null) {
-            redirectAttributes.addFlashAttribute("message", "아이디 또는 비밀번호가 일치하지 않습니다.");
-            return "redirect:/admin/login";
-        }
-
-        session.setAttribute("adminMember", dto);
-        return "redirect:/admin/main";
-    }
-
-    // 로그아웃
-    @GetMapping("/admin/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/admin/login";
-    }
-
-    // 회원정보 수정 폼
-    @GetMapping("/admin/myinfo")
-    public String myInfoForm(HttpSession session) {
-        AdminMemberDto dto = (AdminMemberDto) session.getAttribute("adminMember");
-        return dto == null ? "redirect:/admin/login" : "admin/myinfo";
-    }
-
-    // 회원정보 수정 처리
-    @PostMapping("/admin/myinfo")
-    public String myInfo(AdminMemberDto dto, HttpSession session) {
-        adminMemberService.updateInfo(dto);
-        session.setAttribute("adminMember", dto);
-        return "redirect:/admin/myinfo";
-    }
+	
 }
+
+
+
+
+
+
+
+
